@@ -43,7 +43,13 @@ if ( -d $btrfsPath."/.btrfs/" ) {
  { #JSON output
   my $time = `date +"%H:%M %d.%m.%Y"`;
   $time =~ s/\n//;
-  print "{ \"time\": \"$time\",\n \"subvols\": [\n";
+  print "{ \"time\": \"$time\",\n";
+  #Total disk space
+  my $total = `df -h | grep $btrfsPath`;
+  $total =~ s/\n//;
+  $total =~ s/ +/ /g;
+  $total = (split / /,$total)[1];
+  print " \"total\": \"$total\",\n \"subvols\": [\n";
   my $count = 1;
   my @subs = keys %subvolumes;
   for my $i (sort { $subvolumes{$b} cmp $subvolumes{$a} } @subs) {
